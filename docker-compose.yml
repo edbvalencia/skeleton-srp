@@ -1,0 +1,55 @@
+version: '3.8'
+services:
+
+  backend:
+    container_name: cbackend
+    build:
+      dockerfile: ./backend/Dockerfile.dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8080:8080"
+
+  frontend:
+    container_name: cfrontend
+    build:
+      dockerfile: ./frontend/Dockerfile.dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "5173:5173"
+
+  database:
+    container_name: cdatabase
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgresdb
+     #ojo PGDATA: /data/postgres
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  dbclient:
+    container_name: cdbclient
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: 'pgadmin4@pgadmin.org'
+      PGADMIN_DEFAULT_PASSWORD: 'admin'
+    depends_on:
+      - database
+    volumes:
+      - ./database/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+
+volumes:
+    pgadmin:
