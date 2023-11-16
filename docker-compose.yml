@@ -30,7 +30,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgresdb
+      POSTGRES_DB: exampledb
     volumes:
       - ./database/data:/var/lib/postgresql/data
     ports:
